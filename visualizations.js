@@ -1,53 +1,46 @@
+// Default visualization speed
+let speed = 1000;
+let delay_time = 10000 / (Math.floor(array_size / 10) * speed);
+let c_delay = 0; // updated on every div change
 
+// Handle speed change from slider
+inp_aspeed.addEventListener("input", vis_speed);
 
-//We only have to change background-color and height of the sorting element.
+function vis_speed() {
+    const array_speed = parseInt(inp_aspeed.value);
 
-var speed=1000;
-
-inp_aspeed.addEventListener("input",vis_speed);
-
-function vis_speed()
-{
-    var array_speed=inp_aspeed.value;
-    switch(parseInt(array_speed))
-    {
-        case 1: speed=1;
-                break;
-        case 2: speed=10;
-                break;
-        case 3: speed=100;
-                break;
-        case 4: speed=1000;
-                break;
-        case 5: speed=10000;
-                break;
+    // Map slider value → speed multiplier
+    switch (array_speed) {
+        case 1: speed = 10000; break;  // Slowest
+        case 2: speed = 1000; break;
+        case 3: speed = 100; break;
+        case 4: speed = 10; break;
+        case 5: speed = 1; break;      // Fastest
     }
-    
-    delay_time=10000/(Math.floor(array_size/10)*speed);        //Decrease numerator to increase speed.
+
+    // Update delay time
+    delay_time = 10000 / (Math.floor(array_size / 10) * speed);
 }
 
-var delay_time=10000/(Math.floor(array_size/10)*speed);        //Decrease numerator to increase speed.
-var c_delay=0;//This is updated ov every div change so that visualization is visible.
-
-function div_update(cont,height,color)
-{
-    window.setTimeout(function(){
-        cont.style=" margin:0% " + margin_size + "%; width:" + (100/array_size-(2*margin_size)) + "%; height:" + height + "%; background-color:" + color + ";";
-    },c_delay+=delay_time);
+// Update a single bar
+function div_update(cont, height, color) {
+    window.setTimeout(() => {
+        cont.style.height = height + "%";
+        cont.style.backgroundColor = color;
+        cont.style.margin = "0% " + margin_size + "%";
+        cont.style.width = (100 / array_size - 2 * margin_size) + "%";
+    }, (c_delay += delay_time));
 }
 
-function enable_buttons()
-{
-    window.setTimeout(function(){
-        for(var i=0;i<butts_algos.length;i++)
-        {
-            butts_algos[i].classList=[];
-            butts_algos[i].classList.add("butt_unselected");
-
-            butts_algos[i].disabled=false;
-            inp_as.disabled=false;
-            inp_gen.disabled=false;
-            inp_aspeed.disabled=false;
+// Re-enable controls after sorting
+function enable_buttons() {
+    window.setTimeout(() => {
+        for (let i = 0; i < butts_algos.length; i++) {
+            butts_algos[i].className = "butt_unselected";
+            butts_algos[i].disabled = false;
         }
-    },c_delay+=delay_time);
+        inp_as.disabled = false;
+        inp_gen.disabled = false;
+        inp_aspeed.disabled = false;
+    }, (c_delay += delay_time));
 }
