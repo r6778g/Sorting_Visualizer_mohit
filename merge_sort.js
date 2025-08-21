@@ -1,76 +1,73 @@
+// === Merge Sort Visualizer ===
 
+function Merge() {
+    // Time complexities
+    document.getElementById("Time_Worst").innerText = "O(N log N)";
+    document.getElementById("Time_Average").innerText = "Θ(N log N)";
+    document.getElementById("Time_Best").innerText = "Ω(N log N)";
 
-function Merge()
-{
-    //Setting Time complexities
-    document.getElementById("Time_Worst").innerText="O(N log N)";
-    document.getElementById("Time_Average").innerText="Θ(N log N)";
-    document.getElementById("Time_Best").innerText="Ω(N log N)";
+    // Space complexity
+    document.getElementById("Space_Worst").innerText = "O(N)";
 
-    //Setting Space complexity
-    document.getElementById("Space_Worst").innerText="O(N)";
-
-    c_delay=0;
-
-    merge_partition(0,array_size-1);
+    c_delay = 0;
+    mergePartition(0, array_size - 1);
 
     enable_buttons();
 }
 
-function merge_sort(start,mid,end)
-{
-    var p=start,q=mid+1;
+// Merge two halves
+function merge(start, mid, end) {
+    let leftIndex = start;
+    let rightIndex = mid + 1;
 
-    var Arr=[],k=0;
+    let tempArr = [];
+    let k = 0;
 
-    for(var i=start; i<=end; i++)
-    {
-        if(p>mid)
-        {
-            Arr[k++]=div_sizes[q++];
-            div_update(divs[q-1],div_sizes[q-1],"red");//Color update
-        }
-        else if(q>end)
-        {
-            Arr[k++]=div_sizes[p++];
-            div_update(divs[p-1],div_sizes[p-1],"red");//Color update
-        }
-        else if(div_sizes[p]<div_sizes[q])
-        {
-            Arr[k++]=div_sizes[p++];
-            div_update(divs[p-1],div_sizes[p-1],"red");//Color update
-        }
-        else
-        {
-            Arr[k++]=div_sizes[q++];
-            div_update(divs[q-1],div_sizes[q-1],"red");//Color update
+    // Merge logic
+    for (let i = start; i <= end; i++) {
+        if (leftIndex > mid) {
+            tempArr[k++] = div_sizes[rightIndex];
+            div_update(divs[rightIndex], div_sizes[rightIndex], "red");
+            rightIndex++;
+        } else if (rightIndex > end) {
+            tempArr[k++] = div_sizes[leftIndex];
+            div_update(divs[leftIndex], div_sizes[leftIndex], "red");
+            leftIndex++;
+        } else if (div_sizes[leftIndex] < div_sizes[rightIndex]) {
+            tempArr[k++] = div_sizes[leftIndex];
+            div_update(divs[leftIndex], div_sizes[leftIndex], "red");
+            leftIndex++;
+        } else {
+            tempArr[k++] = div_sizes[rightIndex];
+            div_update(divs[rightIndex], div_sizes[rightIndex], "red");
+            rightIndex++;
         }
     }
 
-    for(var t=0;t<k;t++)
-    {
-        div_sizes[start++]=Arr[t];
-        div_update(divs[start-1],div_sizes[start-1],"green");//Color update
+    // Copy back to original array
+    for (let t = 0; t < k; t++) {
+        div_sizes[start + t] = tempArr[t];
+        div_update(divs[start + t], div_sizes[start + t], "green");
     }
 }
 
-function merge_partition(start,end)
-{
-    if(start < end)
-    {
-        var mid=Math.floor((start + end) / 2);
-        div_update(divs[mid],div_sizes[mid],"yellow");//Color update
+// Recursive partitioning
+function mergePartition(start, end) {
+    if (start < end) {
+        let mid = Math.floor((start + end) / 2);
 
-        merge_partition(start,mid);
-        merge_partition(mid+1,end);
+        div_update(divs[mid], div_sizes[mid], "yellow"); // Highlight mid
 
-        merge_sort(start,mid,end);
+        mergePartition(start, mid);
+        mergePartition(mid + 1, end);
+
+        merge(start, mid, end);
     }
 }
 
 /*
     *****************
     DONE BY:-   TUMMALA KETHAN
-    
+    Refactored & Cleaned: ✅
     *****************
 */
