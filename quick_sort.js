@@ -1,77 +1,72 @@
+// === Quick Sort Visualizer ===
 
+function Quick() {
+    // Time complexities
+    document.getElementById("Time_Worst").innerText = "O(N^2)";
+    document.getElementById("Time_Average").innerText = "Θ(N log N)";
+    document.getElementById("Time_Best").innerText = "Ω(N log N)";
 
-function Quick()
-{
-    //Setting Time complexities
-    document.getElementById("Time_Worst").innerText="O(N^2)";
-    document.getElementById("Time_Average").innerText="Θ(N log N)";
-    document.getElementById("Time_Best").innerText="Ω(N log N)";
+    // Space complexity
+    document.getElementById("Space_Worst").innerText = "O(log N)";
 
-    //Setting Space complexity
-    document.getElementById("Space_Worst").innerText="O(log N)";
-
-    c_delay=0;
-
-    quick_sort(0,array_size-1);
+    c_delay = 0;
+    quickSort(0, array_size - 1);
 
     enable_buttons();
 }
 
-function quick_partition (start, end)
-{
-    var i = start + 1;
-    var piv = div_sizes[start] ;//make the first element as pivot element.
-    div_update(divs[start],div_sizes[start],"yellow");//Color update
+// Partition function
+function partition(start, end) {
+    let i = start + 1;
+    let pivot = div_sizes[start]; // Choose first element as pivot
 
-        for(var j =start + 1; j <= end ; j++ )
-        {
-            //re-arrange the array by putting elements which are less than pivot on one side and which are greater that on other.
-            if (div_sizes[ j ] < piv)
-            {
-                div_update(divs[j],div_sizes[j],"yellow");//Color update
+    div_update(divs[start], pivot, "yellow"); // Highlight pivot
 
-                div_update(divs[i],div_sizes[i],"red");//Color update
-                div_update(divs[j],div_sizes[j],"red");//Color update
+    for (let j = start + 1; j <= end; j++) {
+        if (div_sizes[j] < pivot) {
+            div_update(divs[j], div_sizes[j], "yellow"); // Highlight current
 
-                var temp=div_sizes[i];
-                div_sizes[i]=div_sizes[j];
-                div_sizes[j]=temp;
+            // Highlight swap
+            div_update(divs[i], div_sizes[i], "red");
+            div_update(divs[j], div_sizes[j], "red");
 
-                div_update(divs[i],div_sizes[i],"red");//Height update
-                div_update(divs[j],div_sizes[j],"red");//Height update
+            // Swap values
+            [div_sizes[i], div_sizes[j]] = [div_sizes[j], div_sizes[i]];
 
-                div_update(divs[i],div_sizes[i],"blue");//Height update
-                div_update(divs[j],div_sizes[j],"blue");//Height update
+            // Update heights
+            div_update(divs[i], div_sizes[i], "red");
+            div_update(divs[j], div_sizes[j], "red");
 
-                i += 1;
-            }
-    }
-    div_update(divs[start],div_sizes[start],"red");//Color update
-    div_update(divs[i-1],div_sizes[i-1],"red");//Color update
-    
-    var temp=div_sizes[start];//put the pivot element in its proper place.
-    div_sizes[start]=div_sizes[i-1];
-    div_sizes[i-1]=temp;
+            div_update(divs[i], div_sizes[i], "blue");
+            div_update(divs[j], div_sizes[j], "blue");
 
-    div_update(divs[start],div_sizes[start],"red");//Height update
-    div_update(divs[i-1],div_sizes[i-1],"red");//Height update
-
-    for(var t=start;t<=i;t++)
-    {
-        div_update(divs[t],div_sizes[t],"green");//Color update
+            i++;
+        }
     }
 
-    return i-1;//return the position of the pivot
+    // Place pivot in correct position
+    div_update(divs[start], div_sizes[start], "red");
+    div_update(divs[i - 1], div_sizes[i - 1], "red");
+
+    [div_sizes[start], div_sizes[i - 1]] = [div_sizes[i - 1], div_sizes[start]];
+
+    div_update(divs[start], div_sizes[start], "red");
+    div_update(divs[i - 1], div_sizes[i - 1], "red");
+
+    // Mark sorted part
+    for (let t = start; t <= i; t++) {
+        div_update(divs[t], div_sizes[t], "green");
+    }
+
+    return i - 1; // Pivot index
 }
 
-function quick_sort (start, end )
-{
-    if( start < end )
-    {
-        //stores the position of pivot element
-        var piv_pos = quick_partition (start, end ) ;     
-        quick_sort (start, piv_pos -1);//sorts the left side of pivot.
-        quick_sort (piv_pos +1, end) ;//sorts the right side of pivot.
-    }
- }
+// Recursive Quick Sort
+function quickSort(start, end) {
+    if (start < end) {
+        let pivotIndex = partition(start, end);
 
+        quickSort(start, pivotIndex - 1); // Left side
+        quickSort(pivotIndex + 1, end);   // Right side
+    }
+}
