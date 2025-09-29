@@ -1,7 +1,7 @@
 /*
     *****************
     Main Control Script for Sorting Visualizer
-    Improved for readability, maintainability, and best practices
+    Refactored for readability, maintainability, and best practices
     *****************
 */
 
@@ -16,17 +16,17 @@ container.style.flexDirection = "row";
 
 // ==== CONFIG ====
 const BAR_MIN_HEIGHT = 10;
-const BAR_MARGIN = 0.1;
+const BAR_MARGIN = 0.1; // percentage
 
 // ==== DATA ====
-let arraySize = arraySizeInput.value;
+let arraySize = parseInt(arraySizeInput.value);
 let barHeights = [];
 let barDivs = [];
 
 // ==== EVENT LISTENERS ====
 generateBtn.addEventListener("click", generateArray);
 arraySizeInput.addEventListener("input", updateArraySize);
-document.addEventListener("DOMContentLoaded", updateArraySize);
+document.addEventListener("DOMContentLoaded", generateArray);
 
 algoButtons.forEach(button => {
     button.addEventListener("click", runAlgorithm);
@@ -34,14 +34,14 @@ algoButtons.forEach(button => {
 
 // ==== FUNCTIONS ====
 
-// Generate a new random array
+// Generate a new random array and render bars
 function generateArray() {
     container.innerHTML = "";
     barHeights = [];
     barDivs = [];
 
     for (let i = 0; i < arraySize; i++) {
-        const height = Math.floor(Math.random() * 0.5 * (arraySizeInput.max - arraySizeInput.min)) + BAR_MIN_HEIGHT;
+        const height = Math.floor(Math.random() * 50) + BAR_MIN_HEIGHT; // simple random height
         barHeights.push(height);
 
         const bar = document.createElement("div");
@@ -55,13 +55,13 @@ function generateArray() {
     }
 }
 
-// Update array size and regenerate
+// Update array size from input
 function updateArraySize() {
-    arraySize = arraySizeInput.value;
+    arraySize = parseInt(arraySizeInput.value);
     generateArray();
 }
 
-// Disable all control buttons while sorting
+// Disable all controls while sorting
 function disableControls() {
     algoButtons.forEach(btn => {
         btn.className = "butt_locked";
@@ -73,19 +73,20 @@ function disableControls() {
     speedInput.disabled = true;
 }
 
-// Run selected sorting algorithm
+// Run the selected sorting algorithm
 function runAlgorithm() {
     disableControls();
     this.classList.add("butt_selected");
 
     const algo = this.dataset.algo || this.textContent.trim();
+
     switch (algo) {
-        case "Bubble":    Bubble(); break;
+        case "Bubble": Bubble(); break;
         case "Selection": Selection_sort(); break;
         case "Insertion": Insertion(); break;
-        case "Merge":     Merge(); break;
-        case "Quick":     Quick(); break;
-        case "Heap":      Heap(); break;
+        case "Merge": Merge(); break;
+        case "Quick": Quick(); break;
+        case "Heap": Heap(); break;
         default:
             console.warn("Unknown algorithm:", algo);
     }
